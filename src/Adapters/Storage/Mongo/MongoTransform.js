@@ -735,12 +735,12 @@ function transformConstraint(constraint, inArray) {
     }
 
     case '$interval': {
-      const { start, stop = 0 } = constraint[key]['$interval'];
+      const { after, before = 0 } = constraint[key]['$interval'];
       const now = Date.now();
 
       answer[key] = {
-        $gte: new Date(now - start),
-        $lte: new Date(now - stop),
+        $gte: new Date(now - after),
+        $lte: new Date(now - before),
       };
       break;
     }

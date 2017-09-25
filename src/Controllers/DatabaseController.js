@@ -96,17 +96,21 @@ const validateQuery = query => {
   }
 
   if (query.$interval) {
-    const { start, stop } =  query.$interval;
-    if (!start) {
-      throw new Error(Parse.Error.INVALID_QUERY, '$interval must have a start');
+    const { after, before } =  query.$interval;
+    if (!after) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval must have a after');
     }
 
-    if (typeof start !== 'number' || start < 0) {
-      throw new Error(Parse.Error.INVALID_QUERY, '$interval.start must be a number greater than 0');
+    if (typeof after !== 'number' || after < 0) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval.after must be a number greater than 0');
     }
 
-    if (stop && ((typeof stop !== 'number') || (stop < 0))) {
-      throw new Error(Parse.Error.INVALID_QUERY, '$interval.stop must be a number greater than 0');
+    if (before && ((typeof before !== 'number') || (before < 0))) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval.before must be a number greater than 0');
+    }
+
+    if (after && before && (after < before)) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval.after must be greater than $interval.stop');
     }
   }
 
