@@ -733,6 +733,18 @@ function transformConstraint(constraint, inArray) {
       };
       break;
     }
+
+    case '$interval': {
+      const { start, stop = 0 } = constraint[key]['$interval'];
+      const now = Date.now();
+
+      answer[key] = {
+        $gte: new Date(now - start),
+        $lte: new Date(now - stop),
+      };
+      break;
+    }
+
     default:
       if (key.match(/^\$+/)) {
         throw new Parse.Error(

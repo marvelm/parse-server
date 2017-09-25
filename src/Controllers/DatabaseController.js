@@ -42,7 +42,7 @@ const transformObjectACL = ({ ACL, ...result }) => {
   return result;
 }
 
-const specialQuerykeys = ['$and', '$or', '_rperm', '_wperm', '_perishable_token', '_email_verify_token', '_email_verify_token_expires_at', '_account_lockout_expires_at', '_failed_login_count'];
+const specialQuerykeys = ['$and', '$or', '$interval', '_rperm', '_wperm', '_perishable_token', '_email_verify_token', '_email_verify_token_expires_at', '_account_lockout_expires_at', '_failed_login_count'];
 
 const isSpecialQueryKey = key => {
   return specialQuerykeys.indexOf(key) >= 0;
@@ -92,6 +92,21 @@ const validateQuery = query => {
       query.$or.forEach(validateQuery);
     } else {
       throw new Parse.Error(Parse.Error.INVALID_QUERY, 'Bad $or format - use an array value.');
+    }
+  }
+
+  if (query.$interval) {
+    const { start, stop } =  query.$interval;
+    if (!start) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval must have a start');
+    }
+
+    if (typeof start !== 'number' || start < 0) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval.start must be a number greater than 0');
+    }
+
+    if (stop && ((typeof stop !== 'number') || (stop < 0))) {
+      throw new Error(Parse.Error.INVALID_QUERY, '$interval.stop must be a number greater than 0');
     }
   }
 
