@@ -233,7 +233,7 @@ describe('PushWorker', () => {
           },
           response: { error: 'invalid error...' }
         }
-      ], undefined, true);
+      ], undefined);
       expect(spy).toHaveBeenCalled();
       expect(spy.calls.count()).toBe(1);
       const lastCall = spy.calls.mostRecent();
